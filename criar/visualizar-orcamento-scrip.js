@@ -189,7 +189,7 @@ async function salvarCliente(nomeFantasia, razaoSocial, email, codigoIntegracao)
 
     try {
         // Fazer a requisição POST para incluir o cliente
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/clientes/incluirCliente', {
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/clientes/incluirCliente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -333,7 +333,7 @@ async function filtrarProdutos() {
     const termosPesquisa = pesquisa.split('/').map(termo => termo.trim());
 
     try {
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/produtos/visualizar');
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/produtos/visualizar');
         if (!response.ok) {
             throw new Error('Erro ao buscar os produtos');
         }
@@ -387,7 +387,7 @@ async function pesquisarAmbiente() {
     }
 
     try {
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/ambientes');
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/ambientes');
         if (!response.ok) {
             throw new Error('Erro ao buscar os ambientes');
         }
@@ -1056,7 +1056,7 @@ async function atualizarProposta() {
         console.log('Enviando pedido para salvar:', JSON.stringify(pedido, null, 2)); // Log detalhado para ver o pedido sendo enviado
 
         // Fazer a requisição de atualização do pedido
-        const response = await fetch(`https://visia-b167064af0f4.herokuapp.com/pedido/${idPedido}`, {
+        const response = await fetch(`https://acropoluz-a7ff621dca79.herokuapp.com/pedido/${idPedido}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -1178,7 +1178,7 @@ async function gerarEEnviarProposta() {
 
     try {
         console.log(proposta)
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/omie/incluir-pedido', {
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/omie/incluir-pedido', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1213,7 +1213,7 @@ async function salvarCliente() {
     try {
         console.log(clienteData)
         // Fazer a requisição POST para incluir o cliente
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/clientes/incluirCliente', {
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/clientes/incluirCliente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1261,10 +1261,11 @@ function gerarCodigoClienteIntegracao() {
 
     return `Codigo${letra1}${letra2}${horas}${minutos}${segundos}`;
 }
+
 // Função para buscar clientes
 async function buscarClientes() {
     try {
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/clientes/visualizar');
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/clientes/visualizar');
         if (!response.ok) {
             throw new Error('Erro ao buscar os clientes');
         }
@@ -1278,8 +1279,15 @@ async function buscarClientes() {
             telefone: cliente.telefone2_numero
         }));
 
+        // Configuração do autocomplete com verificação de caracteres
         $("#nome").autocomplete({
-            source: clientes,
+            source: function (request, response) {
+                if (request.term.length >= 3) {
+                    response($.ui.autocomplete.filter(clientes, request.term));
+                } else {
+                    response([]);
+                }
+            },
             select: function (event, ui) {
                 $("#nome").val(ui.item.label);
                 preencherCamposCliente(ui.item);
@@ -1291,11 +1299,12 @@ async function buscarClientes() {
         console.error('Erro ao buscar clientes:', error);
     }
 }
+
 //atualizar clientes
 async function atualizarClientes() {
     try {
         alert('Sua lista de clientes esta sendo atualizada');
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/clientes/atualizar', {
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/clientes/atualizar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1318,7 +1327,7 @@ async function atualizarClientes() {
 async function atualizacaoDeProdutos() {
     try {
         alert("Atualização de produtos Iniciada!")
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/produtos/atualizar', {
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/produtos/atualizar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1439,7 +1448,7 @@ const ambiente = container.querySelector("h4").innerText.trim().replace("Excluir
 
     // Fazer a requisição POST para criar o pedido
     try {
-        const response = await fetch('https://visia-b167064af0f4.herokuapp.com/pedido/criar', {
+        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/pedido/criar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

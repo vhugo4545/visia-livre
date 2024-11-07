@@ -1,5 +1,5 @@
 // URL da API de pedidos
-const apiUrl = 'https://visia-b167064af0f4.herokuapp.com/pedido/';
+const apiUrl = 'https://acropoluz-a7ff621dca79.herokuapp.com/pedido/';
 
 
 

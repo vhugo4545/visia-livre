@@ -1276,7 +1276,7 @@ async function buscarClientes() {
             value: cliente.codigo_cliente_omie,
             cnpj_cpf: cliente.cnpj_cpf,
             endereco: cliente.endereco,
-            telefone: cliente.telefone2_numero
+            telefone: cliente.telefone1_numero
         }));
 
         // Configuração do autocomplete com verificação de caracteres

@@ -17,9 +17,9 @@ async function carregarPedidos() {
         // Obter o token do localStorage
         const token = localStorage.getItem('authToken');
 
-        // Obter o tipo e nome do usuário do localStorage (ou de outra fonte)
-        const tipo = localStorage.getItem('tipoDeAutorizacao');
-        const nome = localStorage.getItem('vendedorSelecionado');
+        // Obter o tipo de autorização e o nome do vendedor do localStorage
+        const tipoDeAutorizacao = localStorage.getItem('tipoDeAutorizacao');
+        const vendedorSelecionado = localStorage.getItem('vendedorSelecionado');
 
         // Fazer a requisição POST para a API com o token
         const response = await fetch(apiUrl, {
@@ -28,7 +28,7 @@ async function carregarPedidos() {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ tipo, nome })
+            body: JSON.stringify({ tipo: tipoDeAutorizacao, nome: vendedorSelecionado })
         });
 
         if (!response.ok) {
@@ -51,15 +51,20 @@ async function carregarPedidos() {
         if (data.success && Array.isArray(data.pedidos)) {
             const pedidos = data.pedidos.reverse(); // Inverter a ordem dos pedidos
 
-            // Iterar sobre os pedidos e exibi-los na tabela
+            // Iterar sobre os pedidos e exibi-los na tabela conforme a autorização
             pedidos.forEach(pedido => {
                 const cliente = pedido.cliente || {};
                 const informacoesOrcamento = pedido.informacoesOrcamento || {};
 
+                // Filtrar pedidos pelo vendedor se o usuário não for admin
+                const vendedorPedido = informacoesOrcamento.vendedor || 'Não informado';
+                if (tipoDeAutorizacao !== 'admin' && vendedorPedido !== vendedorSelecionado) {
+                    return; // Pula para o próximo pedido
+                }
+
                 const valorProposta = `R$ ${pedido.produtos.reduce((acc, produto) => acc + (produto.valorUnitario * produto.quantidade), 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
                 const nomeCliente = cliente.nome || 'Não informado';
                 const cpfCnpj = cliente.cpfCnpj || 'Não informado';
-                const numeroPedido = informacoesOrcamento.vendedor || 'Não informado';
 
                 const dataCriacao = new Date(pedido.createdAt).toLocaleDateString('pt-BR');
                 const dataEntrega = informacoesOrcamento.dataEntrega ? new Date(informacoesOrcamento.dataEntrega).toLocaleDateString('pt-BR') : 'N/A';
@@ -72,7 +77,7 @@ async function carregarPedidos() {
                 linha.innerHTML = `
                     <td>${nomeCliente}</td>
                     <td>${cpfCnpj}</td>
-                    <td>${numeroPedido}</td>
+                    <td>${vendedorPedido}</td>
                     <td>${valorProposta}</td>
                     <td>${dataCriacao}</td>
                     <td>${dataEntrega}</td>
@@ -95,6 +100,7 @@ async function carregarPedidos() {
         console.error('Erro ao carregar os pedidos:', error);
     }
 }
+
 
 
 

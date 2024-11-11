@@ -182,7 +182,10 @@ function abrirModalAdicionarProduto() {
     const modal = new bootstrap.Modal(document.getElementById('adicionarProdutoModal'));
     modal.show();
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para adicionar o produto  generico com os dados preenchidos no modal
 function adicionarProduto() {
     const nomeProduto = document.getElementById('nomeProduto').value;
@@ -229,7 +232,10 @@ function adicionarProduto() {
     const modal = bootstrap.Modal.getInstance(document.getElementById('adicionarProdutoModal'));
     modal.hide();
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para salvar cliente
 async function salvarCliente(nomeFantasia, razaoSocial, email, codigoIntegracao) {
     const clienteData = {
@@ -478,7 +484,10 @@ function incluirProdutosSelecionados() {
 
     atualizarTodosOsCalculos(ambienteSelecionado);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para preencher os produtos agrupados por ambiente no formulário e tornar as tabelas ordenáveis
 function preencherProdutosNosAmbientes(produtos) {
     const tabelasAmbientesDiv = document.getElementById('tabelasAmbientes');
@@ -586,8 +595,11 @@ function preencherProdutosNosAmbientes(produtos) {
     // Atualizar o total geral
     atualizarTotalGeral();
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para criar uma nova tabela para um ambiente específico
 function criarTabelaAmbiente(ambiente) {
     // Verifica se o ambiente é válido
@@ -650,6 +662,10 @@ function criarTabelaAmbiente(ambiente) {
         }
     }).disableSelection();
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> e937d0a (atualização de contato)
 //produtos genericos 
 function adicionarOuIncluirProdutoGenerico() {
     const ambienteSelecionado = document.getElementById('ambienteSelecionado').value;
@@ -720,7 +736,10 @@ function adicionarOuIncluirProdutoGenerico() {
     const produtoGenericoModal = bootstrap.Modal.getInstance(document.getElementById('produtoGenericoModal'));
     produtoGenericoModal.hide();
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para remover produto e atualizar os cálculos
 function removerProduto(element, ambienteSelecionado) {
     const row = element.closest('tr');
@@ -749,7 +768,10 @@ function removerProduto(element, ambienteSelecionado) {
     row.remove();
     atualizarTodosOsCalculos(ambienteSelecionado);
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para adicionar uma observação ao produto
 function adicionarObservacao(element) {
     const observacao = prompt("Adicione uma observação para este produto:");
@@ -757,7 +779,10 @@ function adicionarObservacao(element) {
         alert(`Observação adicionada: ${observacao}`);
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para atualizar cálculos totais dos produtos no ambiente
 function atualizarTodosOsCalculos(ambienteSelecionado) {
     const tabelaAmbiente = document.getElementById(`tabela-${ambienteSelecionado}`);
@@ -856,7 +881,10 @@ function removerProdutosSelecionados() {
 }
 // Associar o clique do botão de remoção à função removerProdutosSelecionados
 document.getElementById('btnRemoverSelecionados').addEventListener('click', removerProdutosSelecionados);
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para adicionar uma observação a um produto
 function adicionarObservacao(element) {
     // Linha do produto onde a observação será adicionada
@@ -900,7 +928,10 @@ function removerAmbiente(ambiente) {
         alert('A remoção foi cancelada.');
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para visualizar os detalhes do produto em um alert
 function verDetalhes(descricaoDetalhada) {
     alert(descricaoDetalhada);
@@ -1178,7 +1209,11 @@ async function atualizarProposta() {
             informacoesOrcamento: {
                 vendedor,
                 agenteArquiteto,
+<<<<<<< HEAD
                 transportadora: tipoEntrega === 'acropoluz' ? 'Acropoluz' : 'Cliente',
+=======
+                transportadora: 
+>>>>>>> e937d0a (atualização de contato)
                 tipoEntrega,
                 valorFrete,
                 tipoPagamento,
@@ -1347,7 +1382,10 @@ async function gerarEEnviarProposta() {
         alert('Ocorreu um erro ao enviar o pedido.');
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e937d0a (atualização de contato)
 // Função para buscar um pedido pelo ID e preencher o formulário com os dados
 async function buscarPedidoPorId() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -1391,7 +1429,11 @@ function preencherFormularioComDadosPedido(pedido) {
     document.getElementById('selectVendedor').value = pedido.informacoesOrcamento.vendedor || '';
     document.getElementById('agenteArquiteto').value = pedido.informacoesOrcamento.agenteArquiteto || '';
     document.getElementById('dataEntrega').value = pedido.informacoesOrcamento.dataEntrega ? pedido.informacoesOrcamento.dataEntrega.slice(0, 10) : '';
+<<<<<<< HEAD
     document.getElementById('tipoEntrega').value = pedido.informacoesOrcamento.transportadora === 'Acropoluz' ? 'acropoluz' : 'cliente';
+=======
+    document.getElementById('tipoEntrega').value = pedido.informacoesOrcamento.transportadora;
+>>>>>>> e937d0a (atualização de contato)
     document.getElementById('valorFrete').value = pedido.informacoesOrcamento.valorFrete || 0;
     document.getElementById('tipoPagamento').value = pedido.informacoesOrcamento.tipoPagamento || '';
     document.getElementById('desconto').value = pedido.informacoesOrcamento.desconto || 0;
@@ -1406,6 +1448,10 @@ async function salvarCliente() {
         email: document.getElementById('clienteEmail').value,
         razao_social:document.getElementById('clienteRazaoSocial').value,
         nome_fantasia: document.getElementById('clienteRazaoSocial').value,
+<<<<<<< HEAD
+=======
+        telefone1_numero: document.getElementById('clienteTelefone').value,
+>>>>>>> e937d0a (atualização de contato)
         estado:"MG"
     };
 
@@ -1474,7 +1520,11 @@ async function buscarClientes() {
             value: cliente.codigo_cliente_omie,
             cnpj_cpf: cliente.cnpj_cpf,
             endereco: cliente.endereco,
+<<<<<<< HEAD
             telefone: cliente.telefone2_numero
+=======
+            telefone: cliente.telefone1_numero
+>>>>>>> e937d0a (atualização de contato)
         }));
 
         $("#nome").autocomplete({
@@ -1747,6 +1797,7 @@ function gerarPaginaOrcamento() {
                     font-family: Arial, sans-serif;
                     margin: 10px;
                 }
+<<<<<<< HEAD
                 .logo.-container {
                     width: 100%;
                     text-align: center;
@@ -1756,6 +1807,19 @@ function gerarPaginaOrcamento() {
                     max-width: 100%;
                     height: auto;
                 }
+=======
+               .logo-container {
+                 width: 100%;
+                 text-align: center;
+                 margin-bottom: 20px;
+                }
+
+                .logo-container img {
+                max-width: 700px; /* Limite de largura máxima para controlar o tamanho */
+                height: auto;
+                }
+
+>>>>>>> e937d0a (atualização de contato)
                 .ambiente-container h4 {
                     text-align: center;
                     text-transform: uppercase;
@@ -1801,8 +1865,13 @@ function gerarPaginaOrcamento() {
         </head>
         <body>
             <!-- logo. -->
+<<<<<<< HEAD
             <div class="logo.-container">
                 <img src="logo.jpg" alt="logo.">
+=======
+            <div class="logo-container">
+                <img src="../logo.jpeg" alt="logo">
+>>>>>>> e937d0a (atualização de contato)
             </div>
 
             <div class="container my-5">
@@ -1937,12 +2006,21 @@ function gerarPaginaOrcamentoSemValores() {
                     font-family: Arial, sans-serif;
                     margin: 10px;
                 }
+<<<<<<< HEAD
                 .logo.-container {
                     width: 100%;
                     text-align: center;
                     margin-bottom: 20px;
                 }
                 .logo.-container img {
+=======
+                .logo-container {
+                    width: 80%;
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .logo-container img {
+>>>>>>> e937d0a (atualização de contato)
                     max-width: 100%;
                     height: auto;
                 }
@@ -1990,9 +2068,15 @@ function gerarPaginaOrcamentoSemValores() {
             </style>
         </head>
         <body>
+<<<<<<< HEAD
             <!-- logo. -->
             <div class="logo.-container">
                 <img src="logo.jpeg" alt="logo.">
+=======
+            <!-- logo -->
+            <div class="logo-container">
+                <img src="../logo.jpeg" alt="logo.">
+>>>>>>> e937d0a (atualização de contato)
             </div>
 
             <div class="container my-5">

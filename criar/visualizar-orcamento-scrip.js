@@ -1351,23 +1351,20 @@ async function atualizacaoDeProdutos() {
 // Função para salvar a proposta
 async function criarProposta() {
     // Obter os dados dos campos
-    
     const nome = document.getElementById('nome').value.trim();
     const idClienteOmie = document.getElementById('idClienteOmie').value.trim();
     const telefone = document.getElementById('telefone').value.trim();
-    const tipoEntrega = document.getElementById('tipoEntrega').value.trim();
-    const tipoPagamento = document.getElementById('tipoPagamento').value.trim();
+    const tipoEntrega = document.getElementById('tipoEntrega').value.trim() || null;
+    const tipoPagamento = document.getElementById('tipoPagamento').value.trim() || null;
     const vendedor = document.getElementById('selectVendedor').value.trim();
 
     // Validações dos campos obrigatórios
-    if (!nome || !idClienteOmie || !telefone || !tipoEntrega || !tipoPagamento || !vendedor) {
+    if (!nome || !idClienteOmie || !telefone || !vendedor) {
         let missingFields = [];
 
         if (!nome) missingFields.push("Nome");
-        if (!idClienteOmie) missingFields.push("ID do Cliente");
+        if (!idClienteOmie) missingFields.push("Selecione um cliente válido");
         if (!telefone) missingFields.push("Telefone");
-        if (!tipoEntrega) missingFields.push("Tipo de Entrega");
-        if (!tipoPagamento) missingFields.push("Tipo de Pagamento");
         if (!vendedor) missingFields.push("Vendedor");
 
         alert(`Por favor, preencha os seguintes campos obrigatórios: ${missingFields.join(', ')}`);
@@ -1386,14 +1383,14 @@ async function criarProposta() {
     // Obter todos os produtos e ambientes
     const produtos = [];
     document.querySelectorAll("#tabelasAmbientes .ambiente-container").forEach(container => {
-       // Função para capturar e limpar o nome do ambiente antes de salvar
-const ambiente = container.querySelector("h4").innerText.trim().replace("Excluir Ambiente", "").trim();
+        // Capturar e limpar o nome do ambiente antes de salvar
+        const ambiente = container.querySelector("h4").innerText.trim().replace("Excluir Ambiente", "").trim();
 
         container.querySelectorAll("tbody tr").forEach((row) => {
             const nomeProduto = row.querySelector("td:nth-child(3)")?.innerText.trim() || '';
             const codigoProduto = row.querySelector("td:nth-child(4)")?.innerText.trim() || '';
             const codigoInterno = row.querySelector("td:nth-child(5)")?.innerText.trim() || '';
-            const valorUnitario = row.querySelector(".valorUnitario")?.innerText.replace(/[R$]/g, '').replace(/\./g, '').replace(',', '.') || 0;
+            const valorUnitario = parseFloat(row.querySelector(".valorUnitario")?.innerText.replace(/[R$]/g, '').replace(/\./g, '').replace(',', '.') || 0);
             const quantidade = parseFloat(row.querySelector(".quantidadeProduto")?.value || 0);
             const valorTotal = parseFloat(row.querySelector(".valorTotal")?.innerText.replace(/[^\d,.-]/g, '').replace(',', '.') || 0);
             let observacao = '';
@@ -1414,7 +1411,7 @@ const ambiente = container.querySelector("h4").innerText.trim().replace("Excluir
                     valorTotal,
                     observacao,
                     ambiente,
-                    statusSeparacao: 'Pendente' // Ajuste do valor correto para o campo enum
+                    statusSeparacao: 'Pendente' // Valor padrão para o campo enum
                 });
             }
         });
@@ -1433,9 +1430,9 @@ const ambiente = container.querySelector("h4").innerText.trim().replace("Excluir
             vendedor,
             agenteArquiteto,
             transportadora: tipoEntrega === 'acropoluz' ? 'Acropoluz' : 'Cliente',
-            tipoEntrega,
+            tipoEntrega, // Pode ser null se estiver vazio
             valorFrete,
-            tipoPagamento,
+            tipoPagamento, // Pode ser null se estiver vazio
             desconto,
             dataEntrega,
         },
@@ -1470,7 +1467,6 @@ const ambiente = container.querySelector("h4").innerText.trim().replace("Excluir
         alert('Erro ao se conectar ao servidor. Tente novamente mais tarde.');
     }
 }
-
 
 
 
@@ -1865,5 +1861,3 @@ function gerarPaginaOrcamentoSemValores() {
         novaJanela.print();
     };
 }
-
-

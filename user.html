@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Usuários</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Gerenciamento de Usuários</h1>
+        
+        <!-- Formulário para criar usuário -->
+        <div class="card mb-4">
+            <div class="card-header">Criar Usuário</div>
+            <div class="card-body">
+                <form id="createUserForm">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="usuario" class="form-label">Usuário</label>
+                        <input type="text" class="form-control" id="usuario" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="senha" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="senha" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Criar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Formulário para atualizar usuário -->
+        <div class="card mb-4">
+            <div class="card-header">Atualizar Usuário</div>
+            <div class="card-body">
+                <form id="updateUserForm">
+                    <div class="mb-3">
+                        <label for="updateId" class="form-label">ID do Usuário</label>
+                        <input type="text" class="form-control" id="updateId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateNome" class="form-label">Novo Nome</label>
+                        <input type="text" class="form-control" id="updateNome">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateUsuario" class="form-label">Novo Usuário</label>
+                        <input type="text" class="form-control" id="updateUsuario">
+                    </div>
+                    <div class="mb-3">
+                        <label for="updateSenha" class="form-label">Nova Senha</label>
+                        <input type="password" class="form-control" id="updateSenha">
+                    </div>
+                    <button type="submit" class="btn btn-warning">Atualizar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Formulário para excluir usuário -->
+        <div class="card mb-4">
+            <div class="card-header">Excluir Usuário</div>
+            <div class="card-body">
+                <form id="deleteUserForm">
+                    <div class="mb-3">
+                        <label for="deleteId" class="form-label">ID do Usuário</label>
+                        <input type="text" class="form-control" id="deleteId" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funções para enviar os formulários usando fetch
+        document.getElementById('createUserForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+
+            fetch('http://localhost:3000/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, usuario, senha })
+            })
+            .then(response => response.json())
+            .then(data => alert('Usuário criado com sucesso!'))
+            .catch(error => alert('Erro ao criar usuário: ' + error));
+        });
+
+        document.getElementById('updateUserForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const id = document.getElementById('updateId').value;
+            const nome = document.getElementById('updateNome').value;
+            const usuario = document.getElementById('updateUsuario').value;
+            const senha = document.getElementById('updateSenha').value;
+
+            fetch(`http://localhost:3000/users/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, usuario, senha })
+            })
+            .then(response => response.json())
+            .then(data => alert('Usuário atualizado com sucesso!'))
+            .catch(error => alert('Erro ao atualizar usuário: ' + error));
+        });
+
+        document.getElementById('deleteUserForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const id = document.getElementById('deleteId').value;
+
+            fetch(`http://localhost:3000/users/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => alert('Usuário excluído com sucesso!'))
+            .catch(error => alert('Erro ao excluir usuário: ' + error));
+        });
+    </script>
+</body>
+</html>

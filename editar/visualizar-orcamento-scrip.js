@@ -1339,7 +1339,7 @@ async function gerarEEnviarProposta() {
         },
         informacoes_adicionais: {
             codigo_categoria: "1.05.98",
-            codigo_conta_corrente: 3498195819,
+            codigo_conta_corrente: 8470223564,
             consumidor_final: "S",
             enviar_email: "N"
         },

@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 // URL da API de pedidos
-const apiUrl = 'https://acropoluz-2-2e754a37c36d.herokuapp.com/pedido/';
+const apiUrl = 'https://visia-2-3e2614848767.herokuapp.com/pedido/';
 
 
 

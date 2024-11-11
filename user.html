@@ -87,7 +87,7 @@
             const usuario = document.getElementById('usuario').value;
             const senha = document.getElementById('senha').value;
 
-            fetch('http://localhost:3000/users', {
+            fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome, usuario, senha })
@@ -104,7 +104,7 @@
             const usuario = document.getElementById('updateUsuario').value;
             const senha = document.getElementById('updateSenha').value;
 
-            fetch(`http://localhost:3000/users/${id}`, {
+            fetch(`https://acropoluz-2-2e754a37c36d.herokuapp.com/users/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome, usuario, senha })
@@ -118,7 +118,7 @@
             e.preventDefault();
             const id = document.getElementById('deleteId').value;
 
-            fetch(`http://localhost:3000/users/${id}`, {
+            fetch(`https://acropoluz-2-2e754a37c36d.herokuapp.com/users/${id}`, {
                 method: 'DELETE'
             })
             .then(response => response.json())

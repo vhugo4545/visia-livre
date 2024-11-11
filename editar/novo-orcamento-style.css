@@ -6,6 +6,15 @@ body {
     margin: 0;
     padding: 0;
 }
+/* Estilo para os cabeçalhos de tabelas ordenáveis */
+.sortable-table th {
+    cursor: pointer; /* Indica que o cabeçalho é clicável */
+}
+.dragging {
+    background-color: #f0f0f0;
+    opacity: 0.8;
+}
+
 
 .container {
     max-width: 1200px;

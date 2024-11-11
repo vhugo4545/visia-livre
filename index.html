@@ -48,14 +48,14 @@
             backdrop-filter: blur(6px);
             border: 2px solid #ffffff80;
             box-shadow: -1px -1px 30px -8px rgb(0, 0, 0);
-            padding: 30px; /* Aumenta o padding para dar mais espaço */
+            padding: 30px;
             border-radius: 1.6rem;
             color: white;
             width: 100%;
-            max-width: 900px; /* Aumenta a largura máxima em 30% */
+            max-width: 900px;
         }
 
-        .logo. {
+        .logo {
             font-size: 2rem;
         }
 
@@ -85,7 +85,7 @@
             color: #fff;
         }
 
-        input[type="submit"] {
+        input[type="button"] {
             border: none;
             background-color: var(--c-primary);
             color: #000000;
@@ -121,7 +121,7 @@
             font-weight: 200;
         }
 
-        .login-icons li > [type="logo."] {
+        .login-icons li > [type="logo"] {
             margin-right: 8px;
         }
 
@@ -139,7 +139,7 @@
     <div class="login-container">
         <div class="login-content">
             <div class="login-content_header">
-                <span class="logo.">
+                <span class="logo">
                     <box-icon type='solid' name='Acropoluz' color="#87A922"></box-icon> Acropoluz
                 </span>
                 <h2>Seja bem-vindo!</h2>
@@ -161,75 +161,46 @@
     </div>
 
     <script>
-        // Função para salvar dados dos vendedores no localStorage
-        function salvarDadosVendedores() {
-            const vendedores = [
-                { nome: "cicero magalhaes", usuario: "cicero.magalhaes", senha: "senha123" },
-                { nome: "daniela turchetti c magalhaes", usuario: "daniela.magalhaes", senha: "senha123" },
-                { nome: "pâmella fernanda porto matias", usuario: "pamella.matias", senha: "senha123" },
-                { nome: "roberta aparecida venâncio carvalho", usuario: "roberta.carvalho", senha: "senha123" },
-                { nome: "valéria sousa maciel", usuario: "valeria.maciel", senha: "senha123" },
-                { nome: "scarlleth fernandes", usuario: "scarlleth.fernandes", senha: "senha123" },
-                { nome: "isabella david", usuario: "isabella.david", senha: "senha123" },
-                { nome: "roberto ramos Pacó", usuario: "roberto.paco", senha: "senha123" },
-                { nome: "marcelo versiani", usuario: "marcelo.versiani", senha: "senha123" },
-                { nome: "nayene karen lemos carvalho", usuario: "nayene.carvalho", senha: "senha123" },
-                { nome: "paulo leite", usuario: "paulo.leite", senha: "senha123" },
-                { nome: "cecilia corgosinho", usuario: "cecilia.corgosinho", senha: "senha123" },
-                { nome: "ana paula felix", usuario: "ana.paula", senha: "senha123" },
-                { nome: "gabriel vinícius do carmo ", usuario: "gabriel.carmo", senha: "senha123" },
-            ];
-
-            // Salvar cada vendedor no localStorage
-            vendedores.forEach((vendedor, index) => {
-                localStorage.setItem(`vendedor_${index}`, JSON.stringify(vendedor));
-            });
-        }
-
-        // Chamar a função para salvar os vendedores no localStorage ao carregar a página
-        document.addEventListener("DOMContentLoaded", salvarDadosVendedores);
-
         // Função de login
-        function login() {
-            // Obter valores dos campos de login
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
+        async function login() {
+    // Obter valores dos campos de login
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-            // Procurar o vendedor no localStorage
-            let isAuthenticated = false;
-            let vendedorAutenticado = null;
+    try {
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, senha: password }),
+        });
 
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith("vendedor_")) {
-                    const vendedor = JSON.parse(localStorage.getItem(key));
-
-                    // Validar usuário e senha
-                    if (vendedor.usuario === username && vendedor.senha === password) {
-                        isAuthenticated = true;
-                        vendedorAutenticado = vendedor;
-                        break;
-                    }
-                }
-            }
-
-            // Verificar autenticação
-            if (isAuthenticated) {
-                // Salvar o nome do vendedor e o token no localStorage
-                const token = `token_${new Date().getTime()}`;
-                localStorage.setItem("vendedorSelecionado", vendedorAutenticado.nome);
-                localStorage.setItem("authToken", token);
-
-                // Redirecionar para a página pedidos.html se autenticação for bem-sucedida
-                window.location.href = "listar/pedidos.html";
-            } else {
-                // Mostrar mensagem de erro
-                document.getElementById("loginError").classList.remove("d-none");
-            }
+        if (!response.ok) {
+            throw new Error('Erro ao fazer login');
         }
 
-        
-    </script>
+        const data = await response.json();
+
+        // Verificar se a resposta contém o token e o nome
+        if (data.token && data.nome) {
+            // Salvar o token e o nome do usuário no localStorage
+            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('vendedorSelecionado', data.nome);
+            localStorage.setItem('tipoDeAutorizacao', data.tipo);
+
+            // Redirecionar para a página desejada
+            window.location.href = 'listar/pedidos.html';
+        } else {
+            throw new Error('Resposta do servidor não contém os dados esperados.');
+        }
+    } catch (error) {
+        console.error('Erro ao fazer login:', error);
+        document.getElementById("loginError").classList.remove("d-none");
+    }
+}
+
+       </script>
 
     <!-- Boxicons CDN -->
     <script src="https://unpkg.com/boxicons@2.1.1/dist/boxicons.js"></script>

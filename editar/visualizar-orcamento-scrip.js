@@ -1,5 +1,15 @@
+document.addEventListener("DOMContentLoaded", function() {
+    if (!document.cookie.includes("sessionCache")) {
+        document.cookie = `sessionCache=${new Date().getTime()}; path=/`;
+        window.location.reload();
+    }
+});
+
+
+
 buscarPedidoPorId()
 buscarClientes()
+
 
 //PopUps
 function cadastrarNovoCliente() {
@@ -182,12 +192,18 @@ function abrirModalAdicionarProduto() {
     const modal = new bootstrap.Modal(document.getElementById('adicionarProdutoModal'));
     modal.show();
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> e937d0a (atualização de contato)
 // Função para adicionar o produto  generico com os dados preenchidos no modal
 function adicionarProduto() {
+
+    const ambienteSelecionado1 = document.getElementById('ambienteSelecionado').value;
+    
+    // Alerta que mostra o ambiente selecionado
+    alert(`Produtos incluídos no ambiente: ${ambienteSelecionado1}`);
+
+    if (ambienteSelecionado1 === '') {
+        alert('Por favor, selecione um ambiente para adicionar produtos.');
+        return;
+    }
     const nomeProduto = document.getElementById('nomeProduto').value;
     const valorUnitario = parseFloat(document.getElementById('valorUnitario').value);
     const quantidade = parseInt(document.getElementById('quantidade').value);
@@ -214,14 +230,15 @@ function adicionarProduto() {
         <td>${nomeProduto}</td>
         <td>101020</td> <!-- Código do Produto (Substituir por valor correto, se necessário) -->
         <td>101020</td> <!-- Código Interno (Substituir por valor correto, se necessário) -->
-        <td><span class="valorUnitario">${valorUnitario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></td>
-        <td><input type="number" class="form-control quantidadeProduto" min="1" value="${quantidade}" onchange="atualizarTodosOsCalculos('${ambienteSelecionado}')"></td>
-        <td><input type="text" class="form-control valorTotal" value="${(valorUnitario * quantidade).toFixed(2).replace('.', ',')}" onchange="atualizarValorUnitario(this, '${ambienteSelecionado}')"></td>
-        <td>
-            <i class="fa fa-times" style="cursor: pointer; color: red;" onclick="removerProduto(this, '${ambienteSelecionado}')" title="Remover Produto"></i>
-            <i class="fa fa-question-circle" style="cursor: pointer; color: blue; margin-right: 10px;" onclick="adicionarObservacao(this)" title="Adicionar Observação"></i>
-        </td>
-    `;
+         <td><span class="valorUnitario">${valorUnitario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></td>
+            <td><input type="number" class="form-control quantidadeProduto" min="1" value="1" onchange="atualizarTodosOsCalculos('${ambienteSelecionado}')"></td>
+            <td><input type="text" class="form-control valorTotal" value="${(valorUnitario).toFixed(2).replace('.', ',')}" onchange="atualizarValorUnitario(this, '${ambienteSelecionado}')"></td>
+             <td><textarea class="form-control" rows="3" cols="30"></textarea></td>
+            <td>
+                <i class="fa fa-times" style="cursor: pointer; color: red;" onclick="removerProduto(this, '${ambienteSelecionado}')" title="Remover Produto"></i>
+                <i class="fa fa-question-circle" style="cursor: pointer; color: blue; margin-right: 10px;" onclick="adicionarObservacao(this)" title="Adicionar Observação"></i>
+            </td>
+        `;
 
     tabelaAmbiente.querySelector('tbody').appendChild(row);
 
@@ -232,10 +249,6 @@ function adicionarProduto() {
     const modal = bootstrap.Modal.getInstance(document.getElementById('adicionarProdutoModal'));
     modal.hide();
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> e937d0a (atualização de contato)
 // Função para salvar cliente
 async function salvarCliente(nomeFantasia, razaoSocial, email, codigoIntegracao) {
     const clienteData = {
@@ -247,7 +260,7 @@ async function salvarCliente(nomeFantasia, razaoSocial, email, codigoIntegracao)
 
     try {
         // Fazer a requisição POST para incluir o cliente
-        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/clientes/incluirCliente', {
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/clientes/incluirCliente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -272,11 +285,14 @@ async function salvarCliente(nomeFantasia, razaoSocial, email, codigoIntegracao)
         alert('Houve um problema ao salvar o cliente.');
     }
 }
+
 // Função para preencher os campos do formulário com os dados do cliente
 function preencherCamposCliente(cliente) {
-    document.getElementById('cpfCnpj').value = cliente.cnpj_cpf || '';
+    console.log(cliente)
+    document.getElementById('cpfCnpj').value = cliente.cnpj_cpf || "";
+    document.getElementById('nome').value = cliente.razao_social||  cliente.label;
     document.getElementById('endereco').value = cliente.endereco || '';
-    document.getElementById('telefone').value = cliente.telefone || '';
+    document.getElementById('telefone').value = cliente.telefone ?? cliente.telefone2_numero ?? '';
     document.getElementById('idClienteOmie').value = cliente.value || '';
 }
 
@@ -293,7 +309,7 @@ async function filtrarProdutos() {
     tabelaProdutos.innerHTML = '';
 
     // Iniciar a pesquisa apenas se houver pelo menos 3 caracteres
-    if (pesquisa.length < 2) {
+    if (pesquisa.length < 3) {
         divTabelaProdutos.style.display = 'none';
         return;
     } else {
@@ -304,7 +320,7 @@ async function filtrarProdutos() {
     const termosPesquisa = pesquisa.split('/').map(termo => termo.trim());
 
     try {
-        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/produtos/visualizar');
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/produtos/visualizar');
         if (!response.ok) {
             throw new Error('Erro ao buscar os produtos');
         }
@@ -323,7 +339,7 @@ async function filtrarProdutos() {
 
         produtosFiltrados.forEach(produto => {
             const imagemUrl = produto.imagens && produto.imagens.length > 0 ? produto.imagens[0].url_imagem : '';
-            const imagemHtml = imagemUrl ? `<img src="${imagemUrl}" alt="Imagem do Produto" class="produto-imagem" style="cursor: pointer; max-width: 50px;" onclick="abrirImagem('${imagemUrl}')">` : '<span>Sem imagem</span>';
+            const imagemHtml = imagemUrl ? `<img src="${imagemUrl}" alt="Imagem do Produto" class="produto-imagem" style="cursor: pointer; max-width: 50px;" ">` : '<span>Sem imagem</span>';
 
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -357,7 +373,7 @@ async function pesquisarAmbiente() {
     }
 
     try {
-        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/ambientes');
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/ambientes');
         if (!response.ok) {
             throw new Error('Erro ao buscar os ambientes');
         }
@@ -382,9 +398,12 @@ async function pesquisarAmbiente() {
             const div = document.createElement('div');
             div.classList.add('item-autocomplete');
             div.innerHTML = `<strong>Cadastrar novo ambiente: "${pesquisa}"</strong>`;
-            div.onclick = function () {
-                cadastrarAmbiente(pesquisa);
-                ambienteSuggestions.style.display = 'none';
+            div.onclick = async function () {
+                const confirmacao = confirm(`Tem certeza que deseja cadastrar o ambiente: "${pesquisa}"?`);
+                if (confirmacao) {
+                    await cadastrarAmbiente(pesquisa);
+                    ambienteSuggestions.style.display = 'none';
+                }
             };
             ambienteSuggestions.appendChild(div);
         }
@@ -392,6 +411,41 @@ async function pesquisarAmbiente() {
         console.error('Erro ao buscar ambientes:', error);
     }
 }
+
+
+// Função para cadastrar um novo ambiente
+async function cadastrarAmbiente(nomeAmbiente) {
+    // Exibir uma confirmação para o usuário
+    const confirmarCadastro = confirm(`Você deseja realmente cadastrar o ambiente: "${nomeAmbiente}"?`);
+
+    if (!confirmarCadastro) {
+        alert('Cadastro cancelado pelo usuário.');
+        return; // Cancela a requisição se o usuário não confirmar
+    }
+
+    try {
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/ambientes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nome: nomeAmbiente })
+        });
+
+        if (response.ok) {
+            alert(`Ambiente "${nomeAmbiente}" cadastrado com sucesso!`);
+        } else {
+            const errorData = await response.json();
+            console.error('Erro ao cadastrar ambiente:', errorData);
+            alert(`Erro ao cadastrar ambiente: ${errorData.message}`);
+        }
+    } catch (error) {
+        console.error('Erro ao cadastrar ambiente:', error);
+        alert('Erro ao cadastrar ambiente. Tente novamente mais tarde.');
+    }
+}
+
+
 // Função para remover um produto da tabela
 function removerProduto(element, ambiente) {
     // Confirmação de remoção
@@ -484,10 +538,6 @@ function incluirProdutosSelecionados() {
 
     atualizarTodosOsCalculos(ambienteSelecionado);
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> e937d0a (atualização de contato)
 // Função para preencher os produtos agrupados por ambiente no formulário e tornar as tabelas ordenáveis
 function preencherProdutosNosAmbientes(produtos) {
     const tabelasAmbientesDiv = document.getElementById('tabelasAmbientes');
@@ -503,33 +553,7 @@ function preencherProdutosNosAmbientes(produtos) {
         ambientesMap[produto.ambiente].push(produto);
     });
 
-    // Função para ordenar as tabelas
-    function sortTable(tabelaId, colIndex) {
-        const tabela = document.getElementById(tabelaId);
-        const tbody = tabela.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-
-        let isAsc = tabela.getAttribute('data-sort-order') === 'asc'; // Alternar ordem de ordenação
-        tabela.setAttribute('data-sort-order', isAsc ? 'desc' : 'asc');
-
-        rows.sort((rowA, rowB) => {
-            const cellA = rowA.querySelectorAll('td')[colIndex].innerText.trim();
-            const cellB = rowB.querySelectorAll('td')[colIndex].innerText.trim();
-
-            // Tentar converter os valores para número, se for possível, ou fazer a comparação de texto
-            const valA = isNaN(cellA.replace(',', '.')) ? cellA.toLowerCase() : parseFloat(cellA.replace(',', '.'));
-            const valB = isNaN(cellB.replace(',', '.')) ? cellB.toLowerCase() : parseFloat(cellB.replace(',', '.'));
-
-            if (isAsc) {
-                return valA > valB ? 1 : -1;
-            } else {
-                return valA < valB ? 1 : -1;
-            }
-        });
-
-        // Reordenar as linhas na tabela
-        rows.forEach(row => tbody.appendChild(row));
-    }
+   
 
     // Criar tabelas para cada ambiente
     Object.keys(ambientesMap).forEach(ambiente => {
@@ -595,11 +619,6 @@ function preencherProdutosNosAmbientes(produtos) {
     // Atualizar o total geral
     atualizarTotalGeral();
 }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> e937d0a (atualização de contato)
 // Função para criar uma nova tabela para um ambiente específico
 function criarTabelaAmbiente(ambiente) {
     // Verifica se o ambiente é válido
@@ -651,21 +670,8 @@ function criarTabelaAmbiente(ambiente) {
     // Adicionando a nova tabela ao container principal de tabelas
     tabelasAmbientesDiv.appendChild(tabelaDiv);
 
-    // Tornar a tabela ordenável com jQuery UI Sortable
-    $(`#tabela-${ambiente} tbody`).sortable({
-        placeholder: "ui-state-highlight",  // Estilo visual ao arrastar
-        axis: "y",  // Limitar arraste ao eixo vertical
-        cursor: "move",  // Mudar o cursor enquanto arrasta
-        update: function(event, ui) {
-            // Atualizar o cálculo do ambiente após a ordenação
-            atualizarTodosOsCalculos(ambiente);
-        }
-    }).disableSelection();
+    tornarTabelasOrdenaveis()
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> e937d0a (atualização de contato)
 //produtos genericos 
 function adicionarOuIncluirProdutoGenerico() {
     const ambienteSelecionado = document.getElementById('ambienteSelecionado').value;
@@ -710,6 +716,7 @@ function adicionarOuIncluirProdutoGenerico() {
             <td><span class="valorUnitario">${valorUnitario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></td>
             <td><input type="number" class="form-control quantidadeProduto" min="1" value="1" onchange="atualizarTodosOsCalculos('${ambienteSelecionado}')"></td>
             <td><input type="text" class="form-control valorTotal" value="${(valorUnitario).toFixed(2).replace('.', ',')}" onchange="atualizarValorUnitario(this, '${ambienteSelecionado}')"></td>
+              <td><textarea class="form-control" rows="3" cols="30">${produto.observacao || ''}</textarea></td>
             <td>
                 <i class="fa fa-times" style="cursor: pointer; color: red;" onclick="removerProduto(this, '${ambienteSelecionado}')" title="Remover Produto"></i>
                 <i class="fa fa-question-circle" style="cursor: pointer; color: blue; margin-right: 10px;" onclick="adicionarObservacao(this)" title="Adicionar Observação"></i>
@@ -736,10 +743,6 @@ function adicionarOuIncluirProdutoGenerico() {
     const produtoGenericoModal = bootstrap.Modal.getInstance(document.getElementById('produtoGenericoModal'));
     produtoGenericoModal.hide();
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> e937d0a (atualização de contato)
 // Função para remover produto e atualizar os cálculos
 function removerProduto(element, ambienteSelecionado) {
     const row = element.closest('tr');
@@ -767,23 +770,13 @@ function removerProduto(element, ambienteSelecionado) {
      }
     row.remove();
     atualizarTodosOsCalculos(ambienteSelecionado);
-}
-<<<<<<< HEAD
-
-=======
->>>>>>> e937d0a (atualização de contato)
-// Função para adicionar uma observação ao produto
+}// Função para adicionar uma observação ao produto
 function adicionarObservacao(element) {
     const observacao = prompt("Adicione uma observação para este produto:");
     if (observacao) {
         alert(`Observação adicionada: ${observacao}`);
     }
-}
-<<<<<<< HEAD
-
-=======
->>>>>>> e937d0a (atualização de contato)
-// Função para atualizar cálculos totais dos produtos no ambiente
+}// Função para atualizar cálculos totais dos produtos no ambiente
 function atualizarTodosOsCalculos(ambienteSelecionado) {
     const tabelaAmbiente = document.getElementById(`tabela-${ambienteSelecionado}`);
     const rows = tabelaAmbiente.querySelectorAll('tbody tr');
@@ -838,7 +831,15 @@ function removerProdutosSelecionados(ambiente) {
     atualizarTotalGeral();
 }
 // Remover produtos selecionados de todas as tabelas de ambientes
+// Remover produtos selecionados de todas as tabelas de ambientes
 function removerProdutosSelecionados() {
+    // Exibir um alerta de confirmação
+    const confirmacao = confirm("Tem certeza de que deseja remover os produtos selecionados?");
+    if (!confirmacao) {
+        // Se o usuário cancelar, interromper a execução da função
+        return;
+    }
+
     // Selecionar todas as tabelas de ambientes
     const tabelasAmbientes = document.querySelectorAll('.ambiente-container');
 
@@ -860,9 +861,8 @@ function removerProdutosSelecionados() {
         // Iterar sobre cada checkbox marcado e remover o produto correspondente
         checkboxesSelecionados.forEach(checkbox => {
             const row = checkbox.closest('tr');
-            let icon = row.querySelector('.fa-times'); // Selecionar o ícone de remoção correspondente
-            if (icon) {
-                removerProduto(icon, ambiente); // Remover o produto utilizando a função existente
+            if (row) {
+                row.remove(); // Remover a linha diretamente
                 produtosRemovidos = true; // Marcar que ao menos um produto foi removido
             }
         });
@@ -879,13 +879,10 @@ function removerProdutosSelecionados() {
         alert('Nenhum produto selecionado para exclusão.');
     }
 }
-// Associar o clique do botão de remoção à função removerProdutosSelecionados
-document.getElementById('btnRemoverSelecionados').addEventListener('click', removerProdutosSelecionados);
-<<<<<<< HEAD
 
-=======
->>>>>>> e937d0a (atualização de contato)
-// Função para adicionar uma observação a um produto
+
+// Associar o clique do botão de remoção à função removerProdutosSelecionados
+document.getElementById('btnRemoverSelecionados').addEventListener('click', removerProdutosSelecionados);// Função para adicionar uma observação a um produto
 function adicionarObservacao(element) {
     // Linha do produto onde a observação será adicionada
     const row = element.closest('tr');
@@ -927,12 +924,7 @@ function removerAmbiente(ambiente) {
         // Caso o usuário clique em "Cancelar", a remoção será interrompida
         alert('A remoção foi cancelada.');
     }
-}
-<<<<<<< HEAD
-
-=======
->>>>>>> e937d0a (atualização de contato)
-// Função para visualizar os detalhes do produto em um alert
+}// Função para visualizar os detalhes do produto em um alert
 function verDetalhes(descricaoDetalhada) {
     alert(descricaoDetalhada);
 }
@@ -1142,6 +1134,9 @@ async function atualizarProposta() {
             header.innerText = header.innerText.replace("Excluir Ambiente", "").trim();
         });
 
+        // Obter o token do localStorage
+        const token = localStorage.getItem('authToken');
+
         // Coletar dados do cliente
         const nome = document.getElementById('nome').value.trim();
         const cpfCnpj = document.getElementById('cpfCnpj').value.trim();
@@ -1168,8 +1163,6 @@ async function atualizarProposta() {
                 const codigoInterno = row.querySelector("td:nth-child(5)")?.innerText.trim() || '';
                 const valorUnitario = row.querySelector(".valorUnitario")?.innerText.replace(/[R$]/g, '').replace(/\./g, '').replace(',', '.') || 0;
                 console.log(valorUnitario);
-
-                
 
                 const quantidade = parseFloat(row.querySelector(".quantidadeProduto")?.value || 0);
                 const valorTotal = parseFloat(row.querySelector(".valorTotal")?.innerText.replace(/[^\d,.-]/g, '').replace(',', '.') || 0);
@@ -1209,11 +1202,7 @@ async function atualizarProposta() {
             informacoesOrcamento: {
                 vendedor,
                 agenteArquiteto,
-<<<<<<< HEAD
-                transportadora: tipoEntrega === 'acropoluz' ? 'Acropoluz' : 'Cliente',
-=======
-                transportadora: 
->>>>>>> e937d0a (atualização de contato)
+                transportadora: tipoEntrega ,
                 tipoEntrega,
                 valorFrete,
                 tipoPagamento,
@@ -1228,9 +1217,10 @@ async function atualizarProposta() {
         console.log('Enviando pedido para salvar:', JSON.stringify(pedido, null, 2)); // Log detalhado para ver o pedido sendo enviado
 
         // Fazer a requisição de atualização do pedido
-        const response = await fetch(`https://acropoluz-a7ff621dca79.herokuapp.com/pedido/${idPedido}`, {
+        const response = await fetch(`https://acropoluz-2-2e754a37c36d.herokuapp.com/pedido/${idPedido}`, {
             method: 'PUT',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(pedido)
@@ -1250,7 +1240,18 @@ async function atualizarProposta() {
         alert('Erro ao se conectar ao servidor. Tente novamente mais tarde.');
     }
 }
+
 // Função para gerar e enviar a proposta para a API
+// Função de exemplo para atualização de status
+async function atualizarStatusParaEfetivado() {
+    // Simulação de lógica para atualização de status
+    console.log("Atualizando o status para Efetivado...");
+    // Aqui você deve incluir a lógica de requisição ao servidor para atualizar o status
+    // Simule um tempo de espera com await
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log("Status atualizado com sucesso!");
+}
+
 async function gerarEEnviarProposta() {
     // Verificar se existe algum produto com o código 101020
     const temProdutoGenerico = [...document.querySelectorAll("#tabelasAmbientes .ambiente-container tbody tr")].some(row => {
@@ -1265,10 +1266,7 @@ async function gerarEEnviarProposta() {
 
     // Verificar se existe algum produto com valor 0,00
     const temValorZero = [...document.querySelectorAll('.valorTotal')].some(cell => {
-        // Tentar pegar o valor diretamente do campo de input caso ele exista, senão pegar o valor do texto
         const valor = parseFloat(cell.value ? cell.value.replace(/[^\d,.-]/g, '').replace(',', '.') : cell.innerText.replace(/[^\d,.-]/g, '').replace(',', '.'));
-    
-        // Verificar se o valor é 0 ou NaN (valor não numérico)
         return valor === 0 || isNaN(valor);
     });
 
@@ -1281,7 +1279,6 @@ async function gerarEEnviarProposta() {
     const dataPrevisao = new Date().toLocaleDateString('pt-BR');
     const numeroPedido = '93168'; // Número do pedido fixo, modificar conforme necessário
 
-    // Função para gerar um código aleatório único
     function gerarCodigoAleatorio() {
         const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         const numeros = Date.now().toString();
@@ -1300,7 +1297,6 @@ async function gerarEEnviarProposta() {
         const desconto = parseFloat(document.getElementById('desconto').value.trim()) || 0;
         const quantidade = parseInt(row.querySelector("td:nth-child(7) .quantidadeProduto").value);
         const valorTotal = row.querySelector("td:nth-child(8) .valorTotal").value.replace(',', '.');
-        console.log(row.querySelector("td:nth-child(8) .valorTotal").value.replace(',', '.'));
         const observacao = row.querySelector("td:nth-child(9) textarea") ? row.querySelector("td:nth-child(9) textarea").value.trim() : '';
 
         if (!isNaN(valorUnitario) && !isNaN(quantidade) && !isNaN(valorTotal)) {
@@ -1361,12 +1357,12 @@ async function gerarEEnviarProposta() {
 
     try {
         console.log(proposta);
-        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/omie/incluir-pedido', {
+        alert("Pedido sendo registrado na Omie, aguarde alguns segundos!");
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/omie/incluir-pedido', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            
             body: JSON.stringify(proposta)
         });
 
@@ -1376,16 +1372,23 @@ async function gerarEEnviarProposta() {
 
         const responseData = await response.json();
         alert('Pedido enviado para o financeiro com sucesso!');
-        atualizarStatusParaEfetivado();
+
+        // Exibir feedback de carregamento enquanto a proposta é atualizada
+        alert('Atualizando a proposta. Por favor, aguarde...');
+        await atualizarProposta(); // Aguarda a conclusão da atualização
+
+        // Chamar a função de atualização de status e aguardar a conclusão
+        await atualizarStatusParaEfetivado();
+        alert('Status atualizado para Efetivado com sucesso!');
     } catch (error) {
         console.error('Erro ao enviar a proposta:', error);
-        alert('Ocorreu um erro ao enviar o pedido.');
+        alert('Ocorreu um erro ao enviar o pedido, o cliente não é válido!');
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> e937d0a (atualização de contato)
+
+
+
 // Função para buscar um pedido pelo ID e preencher o formulário com os dados
 async function buscarPedidoPorId() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -1396,8 +1399,22 @@ async function buscarPedidoPorId() {
         return;
     }
 
+    // Obter o token do localStorage
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        console.error("Token de autenticação não encontrado.");
+        alert("Você precisa estar autenticado para acessar esta página.");
+        return;
+    }
+
     try {
-        const response = await fetch(`https://acropoluz-a7ff621dca79.herokuapp.com/pedido/${idPedido}`);
+        const response = await fetch(`https://acropoluz-2-2e754a37c36d.herokuapp.com/pedido/${idPedido}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
 
         if (!response.ok) {
             throw new Error(`Erro ao buscar o pedido. Status: ${response.status}`);
@@ -1429,11 +1446,7 @@ function preencherFormularioComDadosPedido(pedido) {
     document.getElementById('selectVendedor').value = pedido.informacoesOrcamento.vendedor || '';
     document.getElementById('agenteArquiteto').value = pedido.informacoesOrcamento.agenteArquiteto || '';
     document.getElementById('dataEntrega').value = pedido.informacoesOrcamento.dataEntrega ? pedido.informacoesOrcamento.dataEntrega.slice(0, 10) : '';
-<<<<<<< HEAD
-    document.getElementById('tipoEntrega').value = pedido.informacoesOrcamento.transportadora === 'Acropoluz' ? 'acropoluz' : 'cliente';
-=======
-    document.getElementById('tipoEntrega').value = pedido.informacoesOrcamento.transportadora;
->>>>>>> e937d0a (atualização de contato)
+    document.getElementById('tipoEntrega').value = pedido.informacoesOrcamento.transportadora || "" ;
     document.getElementById('valorFrete').value = pedido.informacoesOrcamento.valorFrete || 0;
     document.getElementById('tipoPagamento').value = pedido.informacoesOrcamento.tipoPagamento || '';
     document.getElementById('desconto').value = pedido.informacoesOrcamento.desconto || 0;
@@ -1448,17 +1461,14 @@ async function salvarCliente() {
         email: document.getElementById('clienteEmail').value,
         razao_social:document.getElementById('clienteRazaoSocial').value,
         nome_fantasia: document.getElementById('clienteRazaoSocial').value,
-<<<<<<< HEAD
-=======
         telefone1_numero: document.getElementById('clienteTelefone').value,
->>>>>>> e937d0a (atualização de contato)
         estado:"MG"
     };
 
     try {
         console.log(clienteData)
         // Fazer a requisição POST para incluir o cliente
-        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/clientes/incluirCliente', {
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/clientes/incluirCliente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1509,7 +1519,7 @@ function gerarCodigoClienteIntegracao() {
 // Função para buscar clientes
 async function buscarClientes() {
     try {
-        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/clientes/visualizar');
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/clientes/visualizar');
         if (!response.ok) {
             throw new Error('Erro ao buscar os clientes');
         }
@@ -1520,21 +1530,26 @@ async function buscarClientes() {
             value: cliente.codigo_cliente_omie,
             cnpj_cpf: cliente.cnpj_cpf,
             endereco: cliente.endereco,
-<<<<<<< HEAD
-            telefone: cliente.telefone2_numero
-=======
             telefone: cliente.telefone1_numero
->>>>>>> e937d0a (atualização de contato)
         }));
 
         $("#nome").autocomplete({
-            source: clientes,
+            source: function (request, response) {
+                // Verifica se o comprimento do valor digitado é maior ou igual a 3
+                if (request.term.length >= 3) {
+                    response($.ui.autocomplete.filter(clientes, request.term));
+                } else {
+                    // Caso contrário, não retorna sugestões
+                    response([]);
+                }
+            },
             select: function (event, ui) {
                 $("#nome").val(ui.item.label);
                 preencherCamposCliente(ui.item);
                 return false;
             }
         });
+        
 
     } catch (error) {
         console.error('Erro ao buscar clientes:', error);
@@ -1544,7 +1559,7 @@ async function buscarClientes() {
 async function atualizarClientes() {
     try {
         alert('Sua lista de clientes esta sendo atualizada');
-        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/clientes/atualizar', {
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/clientes/atualizar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1567,7 +1582,7 @@ async function atualizarClientes() {
 async function atualizacaoDeProdutos() {
     try {
         alert("Atualização de produtos Iniciada!")
-        const response = await fetch('https://acropoluz-a7ff621dca79.herokuapp.com/produtos/atualizar', {
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/produtos/atualizar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1590,6 +1605,16 @@ async function atualizacaoDeProdutos() {
 } 
 //atualizar status de efetivação
 async function atualizarStatusParaEfetivado() {
+
+    const temProdutoGenerico = [...document.querySelectorAll("#tabelasAmbientes .ambiente-container tbody tr")].some(row => {
+        const codigoProduto = row.querySelector("td:nth-child(5)").innerText.trim();
+        return codigoProduto === '101020';
+    });
+
+    if (temProdutoGenerico) {
+        alert('Existe um produto genérico (código 101020) na tabela. Solicite o cadastro do produto antes de enviar a proposta.');
+        return; // Cancelar a função
+    }
     // Obter o ID do pedido da URL
     const urlParams = new URLSearchParams(window.location.search);
     const idPedido = urlParams.get('id');
@@ -1600,8 +1625,24 @@ async function atualizarStatusParaEfetivado() {
     }
 
     try {
+        // Obter o token do localStorage
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            alert('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
+        // Configurações de headers com o token
+        const headers = {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        };
+
         // Fazer uma requisição GET para obter o pedido existente
-        const responseGet = await fetch(`https://acropoluz-a7ff621dca79.herokuapp.com/pedido/${idPedido}`);
+        const responseGet = await fetch(`https://acropoluz-2-2e754a37c36d.herokuapp.com/pedido/${idPedido}`, {
+            method: 'GET',
+            headers: headers
+        });
 
         if (!responseGet.ok) {
             throw new Error(`Erro ao buscar o pedido: ${responseGet.status} - ${responseGet.statusText}`);
@@ -1614,11 +1655,9 @@ async function atualizarStatusParaEfetivado() {
         pedido.status = 'Efetivado';
 
         // Fazer a requisição de atualização do pedido
-        const responsePut = await fetch(`https://acropoluz-a7ff621dca79.herokuapp.com/pedido/${idPedido}`, {
+        const responsePut = await fetch(`https://acropoluz-2-2e754a37c36d.herokuapp.com/pedido/${idPedido}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: headers,
             body: JSON.stringify(pedido)
         });
 
@@ -1636,6 +1675,8 @@ async function atualizarStatusParaEfetivado() {
         alert('Erro ao se conectar ao servidor. Tente novamente mais tarde.');
     }
 }
+
+
 async function atualizarStatusParaPerdido() {
     // Obter o ID do pedido da URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -1655,8 +1696,21 @@ async function atualizarStatusParaPerdido() {
     }
 
     try {
+        // Obter o token do localStorage
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            alert('Token de autenticação não encontrado. Por favor, faça login novamente.');
+            return;
+        }
+
         // Fazer uma requisição GET para obter o pedido existente
-        const responseGet = await fetch(`https://acropoluz-a7ff621dca79.herokuapp.com/pedido/${idPedido}`);
+        const responseGet = await fetch(`https://acropoluz-2-2e754a37c36d.herokuapp.com/pedido/${idPedido}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
 
         if (!responseGet.ok) {
             throw new Error(`Erro ao buscar o pedido: ${responseGet.status} - ${responseGet.statusText}`);
@@ -1669,9 +1723,10 @@ async function atualizarStatusParaPerdido() {
         pedido.status = 'Perdido';
 
         // Fazer a requisição de atualização do pedido
-        const responsePut = await fetch(`https://acropoluz-a7ff621dca79.herokuapp.com/pedido/${idPedido}`, {
+        const responsePut = await fetch(`https://acropoluz-2-2e754a37c36d.herokuapp.com/pedido/${idPedido}`, {
             method: 'PUT',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(pedido)
@@ -1693,22 +1748,21 @@ async function atualizarStatusParaPerdido() {
 }
 
 
+
 //Impressoes e propostas
 // Função para gerar o PDF do orçamento
 function gerarPaginaOrcamento() {
     // Verificar se existe algum valor igual a 0,00 na tabela
     const temValorZero = [...document.querySelectorAll('.valorTotal')].some(cell => {
-        // Tentar pegar o valor diretamente do campo de input caso ele exista, senão pegar o valor do texto
         const valor = parseFloat(cell.value ? cell.value.replace(/[^\d,.-]/g, '').replace(',', '.') : cell.innerText.replace(/[^\d,.-]/g, '').replace(',', '.'));
-    
-        // Verificar se o valor é 0 ou NaN (valor não numérico)
         return valor === 0 || isNaN(valor);
     });
-    
+
     if (temValorZero) {
         alert('Existem produtos com valor 0,00 na tabela. Verifique antes de enviar.');
         return;
     }
+
     // Obter as informações do cliente e do pedido
     const nomeCliente = document.getElementById('nome').value;
     const cpfCnpj = document.getElementById('cpfCnpj').value;
@@ -1739,9 +1793,6 @@ function gerarPaginaOrcamento() {
             const quantidade = row.querySelector('.quantidadeProduto').value;
             const valorTotal = row.querySelector('.valorTotal').value;
             const observacao = row.querySelector('textarea') ? row.querySelector('textarea').value.trim() : '';
-
-            // Filtrar o nome do produto: remover "**" e limitar aos 10 primeiros caracteres
-            nomeProduto = nomeProduto.replace(/\*\*/g, '').substring(0, 10);
 
             linhasTabelaHtml += `
                 <tr>
@@ -1784,6 +1835,12 @@ function gerarPaginaOrcamento() {
     const totalComDesconto = desconto > 0 ? totalGeral * (1 - desconto / 100) : totalGeral;
 
     // Criar a estrutura HTML da nova página de orçamento
+    const dataAtual = new Date();
+    const dataCriacaoFormatada = dataAtual.toLocaleDateString('pt-BR');
+    const dataValidade = new Date(dataAtual);
+    dataValidade.setDate(dataAtual.getDate() + 7);
+    const dataValidadeFormatada = dataValidade.toLocaleDateString('pt-BR');
+    
     const novaPaginaHtml = `
         <!DOCTYPE html>
         <html lang="pt-br">
@@ -1797,29 +1854,15 @@ function gerarPaginaOrcamento() {
                     font-family: Arial, sans-serif;
                     margin: 10px;
                 }
-<<<<<<< HEAD
-                .logo.-container {
+                .logo-container {
                     width: 100%;
                     text-align: center;
                     margin-bottom: 20px;
                 }
-                .logo.-container img {
-                    max-width: 100%;
+                .logo-container img {
+                    max-width: 700px;
                     height: auto;
                 }
-=======
-               .logo-container {
-                 width: 100%;
-                 text-align: center;
-                 margin-bottom: 20px;
-                }
-
-                .logo-container img {
-                max-width: 700px; /* Limite de largura máxima para controlar o tamanho */
-                height: auto;
-                }
-
->>>>>>> e937d0a (atualização de contato)
                 .ambiente-container h4 {
                     text-align: center;
                     text-transform: uppercase;
@@ -1861,26 +1904,34 @@ function gerarPaginaOrcamento() {
                 th {
                     background-color: #f2f2f2;
                 }
+                .footer {
+                    margin-top: 20px;
+                    text-align: center;
+                    font-size: 0.9rem;
+                    color: #555;
+                }
             </style>
         </head>
         <body>
-            <!-- logo. -->
-<<<<<<< HEAD
-            <div class="logo.-container">
-                <img src="logo.jpg" alt="logo.">
-=======
             <div class="logo-container">
                 <img src="../logo.jpeg" alt="logo">
->>>>>>> e937d0a (atualização de contato)
             </div>
-
             <div class="container my-5">
-                <!-- Informações do Cliente -->
+                <div class="d-flex align-items-start">
+                    <div>
+                        <p class="mb-1"><strong> Acrópoluz Soluções em Iluminação</strong></p>
+                        <p class="mb-1">Endereço: Av. Portugal, 4370 - Itapoã, Belo Horizonte - MG, 31270-705</p>
+                        <p class="mb-1">Telefone: (31) 3448-2500</p>
+                        <p class="mb-1">Email: contato@acropoluz.com.br</p>
+                        <p class="mb-1">CNPJ: 48.008.794/0001-66</p>
+                        <p class="mb-1">Inscrição estadual: 44448850048</p>
+                    </div>
+                </div>
+                <hr>
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <h3>Informações do Cliente</h3>
                         <p><strong>Nome:</strong> ${nomeCliente}</p>
-                        <p><strong>CPF/CNPJ:</strong> ${cpfCnpj}</p>
                         <p><strong>Endereço:</strong> ${endereco}, ${numeroComplemento}</p>
                         <p><strong>Telefone:</strong> ${telefone}</p>
                         <p><strong>Tipo de Entrega:</strong> ${tipoEntrega}</p>
@@ -1890,33 +1941,43 @@ function gerarPaginaOrcamento() {
                         <h3>Informações do Pedido</h3>
                         <p><strong>Vendedor:</strong> ${vendedor}</p>
                         <p><strong>Agente/Arquiteto:</strong> ${agenteArquiteto}</p>
-                        <p><strong>Data de Previsão de Entrega:</strong> ${new Date(dataEntrega).toLocaleDateString('pt-BR')}</p>
+                       <p><strong>Data de Previsão de Entrega:</strong> ${dataEntrega && !isNaN(new Date(dataEntrega)) ? new Date(dataEntrega).toLocaleDateString('pt-BR') : ''}</p>
                         <p><strong>Tipo de Pagamento:</strong> ${tipoPagamento}</p>
                     </div>
                 </div>
                 <center>
-               <h1> Proposta Comercial </h1> 
+                    <h1>Proposta Comercial</h1>
                 </center>
                 <hr>
-                <!-- Tabelas dos Ambientes -->
                 ${tabelasAmbientesHtml}
                 <div class="total-geral-bar mt-4">Total Geral: R$ ${totalGeral.toFixed(2).replace('.', ',')}</div>
                 ${desconto > 0 ? `<div class="total-geral-bar mt-4">Total com Desconto Aplicado: R$ ${totalComDesconto.toFixed(2).replace('.', ',')}</div>` : ''}
             </div>
+            <div class="footer">
+                <p>Data de criação da proposta: ${dataCriacaoFormatada}</p>
+                <p>Validade da proposta: ${dataValidadeFormatada}</p>
+            </div>
         </body>
         </html>
     `;
+    
 
     // Abrir a nova página em uma aba para visualização
     const novaJanela = window.open('', '_blank');
     novaJanela.document.write(novaPaginaHtml);
     novaJanela.document.close();
 
+    // Configurar aviso antes de sair da aba
+    novaJanela.onbeforeunload = function () {
+        return 'Você tem certeza que deseja sair desta página? Certifique-se de ter finalizado suas ações antes de sair.';
+    };
+
     // Configurar para impressão com margens mínimas e bordas ajustadas
     novaJanela.onload = function () {
         novaJanela.print();
     };
 }
+
 function gerarPaginaOrcamentoSemValores() {
     // Verificar se existe algum valor igual a 0,00 na tabela
     const temValorZero = [...document.querySelectorAll('.valorTotal')].some(cell => {
@@ -1993,121 +2054,136 @@ function gerarPaginaOrcamentoSemValores() {
     });
 
     // Criar a estrutura HTML da nova página de orçamento
-    const novaPaginaHtml = `
-        <!DOCTYPE html>
-        <html lang="pt-br">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Proposta Comercial: ${nomeCliente} - Visualização</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-            <style>
+  // Calcula a data de criação e a data de validade (7 dias a partir da data de criação)
+const dataCriacao = new Date();
+const dataValidade = new Date();
+dataValidade.setDate(dataCriacao.getDate() + 7);
+
+const dataCriacaoFormatada = dataCriacao.toLocaleDateString('pt-BR');
+const dataValidadeFormatada = dataValidade.toLocaleDateString('pt-BR');
+
+const novaPaginaHtml = `
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Proposta Comercial: ${nomeCliente} - Visualização</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 10px;
+            }
+            .logo-container {
+                width: 80%;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .logo-container img {
+                max-width: 100%;
+                height: auto;
+            }
+            .ambiente-container h4 {
+                text-align: center;
+                text-transform: uppercase;
+                font-weight: bold;
+            }
+            .total-ambiente-bar, .total-geral-bar {
+                width: 100%;
+                font-size: 1.2rem;
+                font-weight: bold;
+                background-color: #878c91;
+                color: #ffffff;
+                padding: 15px;
+                margin-top: 10px;
+                text-align: center;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 20px;
+                font-size: 0.9rem;
+                color: #555;
+            }
+            @media print {
                 body {
-                    font-family: Arial, sans-serif;
-                    margin: 10px;
+                    -webkit-print-color-adjust: exact;
+                    margin: 0;
                 }
-<<<<<<< HEAD
-                .logo.-container {
-                    width: 100%;
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
-                .logo.-container img {
-=======
-                .logo-container {
-                    width: 80%;
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
-                .logo-container img {
->>>>>>> e937d0a (atualização de contato)
-                    max-width: 100%;
-                    height: auto;
-                }
-                .ambiente-container h4 {
-                    text-align: center;
-                    text-transform: uppercase;
-                    font-weight: bold;
+                .table-bordered th, .table-bordered td {
+                    border: 1px solid #000 !important;
                 }
                 .total-ambiente-bar, .total-geral-bar {
-                    width: 100%;
-                    font-size: 1.2rem;
-                    font-weight: bold;
-                    background-color: #878c91;
-                    color: #ffffff;
-                    padding: 15px;
-                    margin-top: 10px;
-                    text-align: center;
+                    background-color: #000 !important;
+                    color: white !important;
                 }
-                @media print {
-                    body {
-                        -webkit-print-color-adjust: exact;
-                        margin: 0;
-                    }
-                    .table-bordered th, .table-bordered td {
-                        border: 1px solid #000 !important;
-                    }
-                    .total-ambiente-bar, .total-geral-bar {
-                        background-color: #000 !important;
-                        color: white !important;
-                    }
-                }
-                table {
-                    width: 100%;
-                    margin-bottom: 20px;
-                    border-collapse: collapse;
-                }
-                th, td {
-                    border: 1px solid #ddd;
-                    padding: 8px;
-                    text-align: left;
-                }
-                th {
-                    background-color: #f2f2f2;
-                }
-            </style>
-        </head>
-        <body>
-<<<<<<< HEAD
-            <!-- logo. -->
-            <div class="logo.-container">
-                <img src="logo.jpeg" alt="logo.">
-=======
-            <!-- logo -->
-            <div class="logo-container">
-                <img src="../logo.jpeg" alt="logo.">
->>>>>>> e937d0a (atualização de contato)
-            </div>
+            }
+            table {
+                width: 100%;
+                margin-bottom: 20px;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- logo -->
+        <center>
+        <div class="logo-container">
+            <img src="../logo.jpeg" alt="logo.">
+        </div>
+        </center>
 
-            <div class="container my-5">
-                <!-- Informações do Cliente -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <h3>Informações do Cliente</h3>
-                        <p><strong>Nome:</strong> ${nomeCliente}</p>
-                        <p><strong>CPF/CNPJ:</strong> ${cpfCnpj}</p>
-                        <p><strong>Endereço:</strong> ${endereco}, ${numeroComplemento}</p>
-                        <p><strong>Telefone:</strong> ${telefone}</p>
-                        <p><strong>Tipo de Entrega:</strong> ${tipoEntrega}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h3>Informações do Pedido</h3>
-                        <p><strong>Vendedor:</strong> ${vendedor}</p>
-                        <p><strong>Agente/Arquiteto:</strong> ${agenteArquiteto}</p>
-                        <p><strong>Data de Previsão de Entrega:</strong> ${new Date(dataEntrega).toLocaleDateString('pt-BR')}</p>
-                        <p><strong>Tipo de Pagamento:</strong> ${tipoPagamento}</p>
-                    </div>
+        <div class="container my-5">
+            <div class="d-flex align-items-start">
+                <div>
+                    <p class="mb-1"><strong>Acrópoluz Soluções em Iluminação</strong></p>
+                    <p class="mb-1">Endereço: Av. Portugal, 4370 - Itapoã, Belo Horizonte - MG, 31270-705</p>
+                    <p class="mb-1">Telefone: (31) 3448-2500</p>
+                    <p class="mb-1">Email: contato@acropoluz.com.br</p>
+                    <p class="mb-1">Inscrição estadual: 44448850048</p>
                 </div>
-                <center>
-               <h1> Proposta Comercial </h1> 
-                </center>
-                <hr>
-                <!-- Tabelas dos Ambientes -->
-                ${tabelasAmbientesHtml}
             </div>
-        </body>
-        </html>
-    `;
+            <hr>
+            <!-- Informações do Cliente -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h3>Informações do Cliente</h3>
+                    <p><strong>Nome:</strong> ${nomeCliente}</p>
+                    <p><strong>Endereço:</strong> ${endereco}, ${numeroComplemento}</p>
+                    <p><strong>Telefone:</strong> ${telefone}</p>
+                    <p><strong>Tipo de Entrega:</strong> ${tipoEntrega}</p>
+                </div>
+                <div class="col-md-6">
+                    <h3>Informações do Pedido</h3>
+                    <p><strong>Vendedor:</strong> ${vendedor}</p>
+                    <p><strong>Agente/Arquiteto:</strong> ${agenteArquiteto}</p>
+                    <p><strong>Data de Previsão de Entrega:</strong> ${dataEntrega && !isNaN(new Date(dataEntrega)) ? new Date(dataEntrega).toLocaleDateString('pt-BR') : ''}</p>
+                    <p><strong>Tipo de Pagamento:</strong> ${tipoPagamento}</p>
+                </div>
+            </div>
+            <center>
+                <h1>Proposta Comercial</h1> 
+            </center>
+            <hr>
+            <!-- Tabelas dos Ambientes -->
+            ${tabelasAmbientesHtml}
+        </div>
+        <div class="footer">
+            <p>Data de criação do documento: ${dataCriacaoFormatada}</p>
+           
+        </div>
+    </body>
+    </html>
+`;
+
 
     // Abrir a nova página em uma aba para visualização
     const novaJanela = window.open('', '_blank');
@@ -2118,6 +2194,65 @@ function gerarPaginaOrcamentoSemValores() {
     novaJanela.onload = function () {
         novaJanela.print();
     };
+    
 }
 
+window.addEventListener("load", function() {
+    // Aguarda 3 segundos após o carregamento completo da página e requisições
+    setTimeout(() => {
+       
+        // Chama a função após a contagem
+        tornarTabelasOrdenaveis();
+        
+        console.log("Função tornarTabelasOrdenaveis() foi executada.");
+    }, 2000);
+});
 
+// Função para tornar as tabelas ordenáveis com arrastar e soltar
+function tornarTabelasOrdenaveis() {
+    const tabelas = document.querySelectorAll("table");
+
+    tabelas.forEach(tabela => {
+        const tbodies = tabela.querySelectorAll("tbody");
+
+        tbodies.forEach(tbody => {
+            const rows = tbody.querySelectorAll("tr");
+
+            rows.forEach(row => {
+                row.setAttribute("draggable", "true");
+
+                row.addEventListener("dragstart", function(e) {
+                    e.dataTransfer.effectAllowed = "move";
+                    e.dataTransfer.setData("text/plain", row.rowIndex);
+                    row.classList.add("dragging");
+                });
+
+                row.addEventListener("dragover", function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "move";
+                });
+
+                row.addEventListener("drop", function(e) {
+                    e.preventDefault();
+                    const draggingRow = document.querySelector(".dragging");
+                    const dropTargetRow = e.target.closest("tr");
+
+                    if (draggingRow && dropTargetRow && draggingRow !== dropTargetRow) {
+                        tbody.insertBefore(draggingRow, dropTargetRow.nextSibling);
+                    }
+                });
+
+                row.addEventListener("dragend", function() {
+                    row.classList.remove("dragging");
+                });
+
+                // Mudar o cursor para indicar a possibilidade de arrastar
+                row.addEventListener("mouseover", function() {
+                    row.style.cursor = "grab";
+                });
+            });
+        });
+    });
+
+    console.log("Tabelas ordenáveis foram inicializadas.");
+}

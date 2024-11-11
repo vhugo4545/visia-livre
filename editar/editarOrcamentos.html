@@ -2,6 +2,11 @@
 <html lang="pt-BR">
 
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nova Proposta</title>
@@ -25,14 +30,12 @@
     <!-- jsPDF e html2canvas para gerar PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<<<<<<< HEAD
 
-=======
     
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     
->>>>>>> e937d0a (atualização de contato)
+
     <style>
         .total-ambiente-bar, .total-geral-bar {
             width: 100%;
@@ -119,11 +122,9 @@
     <!-- Formulário de Novo Orçamento -->
     <div class="container my-5" id="orcamentoContainer">
         <div class="d-flex align-items-start">
-<<<<<<< HEAD
-            <img src="/editar/logo.jpg" alt="logo. Orçamento" class="img-fluid me-3" style="width: 150px; height: 150px; object-fit: contain;">
-=======
-            <img src="../logo.jpeg" alt="logo. Orçamento" class="img-fluid me-3" style="width: 150px; height: 150px; object-fit: contain;">
->>>>>>> e937d0a (atualização de contato)
+
+          <img src="../logo.jpeg" alt="logo" class="img-fluid me-3" style="width: 150px; height: 150px; object-fit: contain;">
+
             <div>
               <p class="mb-1"><strong> Acrópoluz Soluções em Iluminação</strong></p>
                 <p class="mb-1">Endereço: Av. Portugal, 4370 - Itapoã, Belo Horizonte - MG, 31270-705</p>
@@ -180,7 +181,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="mb-3">
-                        <label for="nome" class="form-label">Nome</label>
+                        <label for="nome" class="form-label">Nome (Razao Social):</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="nome" placeholder="Pesquisar ou adicionar cliente" required>
                             <button class="btn btn-outline-secondary" type="button" onclick="buscarClientes()">
@@ -224,27 +225,18 @@
                     <div class="mb-3">
                         <label for="tipoEntrega" class="form-label">Tipo de Entrega</label>
                         <select class="form-control" id="tipoEntrega">
-<<<<<<< HEAD
                             <option value="">Selecione o tipo de entrega</option>
                             <option value="cliente">Por conta do cliente</option>
                             <option value="acropoluz">Por conta da Acropoluz</option>
-=======
-                            <option value="Vazio">Selecione o tipo de entrega</option>
-                            <option value="Cliente">Por conta do cliente</option>
-                            <option value="Acropoluz">Por conta da Acropoluz</option>
->>>>>>> e937d0a (atualização de contato)
+                         
+                           
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="valorFrete" class="form-label">Valor do Frete</label>
                         <input type="text" class="form-control" id="valorFrete" placeholder="Digite o valor do frete">
                     </div>
-<<<<<<< HEAD
-                    
-                      
-=======
-   
->>>>>>> e937d0a (atualização de contato)
+
                     
                 </div>
         
@@ -399,11 +391,12 @@
 
         <!-- Barra Inferior Fixa -->
         <div class="fixed-bottom-bar">
-            <button onclick="atualizarStatusParaPerdido()" style="background-color: rgb(116, 32, 88); border: none; padding: 10px 20px; color: rgb(243, 243, 243); cursor: pointer;">Atulizar para perdido</button>
+            <button onclick="atualizarStatusParaPerdido()" style="background-color: rgb(116, 32, 88); border: none; padding: 10px 20px; color: rgb(243, 243, 243); cursor: pointer;">Atualizar para perdido</button>
             <button onclick="atualizarProposta()">Atualizar</button>
             <button onclick="gerarPaginaOrcamento()">Gerar Folha de Proposta</button>
             <button onclick="gerarPaginaOrcamentoSemValores()">Versão de entrega</button>
             <button onclick="gerarEEnviarProposta()">Baixa no pedido</button>
+            <button onclick="atualizarStatusParaEfetivado()" style="background-color: rgb(11, 219, 11); border: none; padding: 10px 20px; color: rgb(243, 243, 243); cursor: pointer;">Atualizar para Efetivado</button>
         </div>
     </div>
 

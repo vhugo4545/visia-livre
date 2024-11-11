@@ -1963,12 +1963,13 @@ function gerarPaginaOrcamento() {
             <div class="container my-5">
                 <div class="d-flex align-items-start">
                     <div>
-                        <p class="mb-1"><strong> Acrópoluz Soluções em Iluminação</strong></p>
-                        <p class="mb-1">Endereço: Av. Portugal, 4370 - Itapoã, Belo Horizonte - MG, 31270-705</p>
-                        <p class="mb-1">Telefone: (31) 3448-2500</p>
-                        <p class="mb-1">Email: contato@acropoluz.com.br</p>
-                        <p class="mb-1">CNPJ: 48.008.794/0001-66</p>
-                        <p class="mb-1">Inscrição estadual: 44448850048</p>
+                     <p class="mb-1"><strong>VISIA Lighting Solution LTDA</strong></p>
+<p class="mb-1">Endereço: Rua Alvimar Carneiro 1832, Novo Progresso - Contagem, MG - 32115160</p>
+<p class="mb-1">Telefone: Celular: (31) 98893-0131</p>
+<p class="mb-1">Email: contato@acropoluz.com.br</p>
+<p class="mb-1">CNPJ: 48.008.794/0001-66</p>
+<p class="mb-1">Inscrição estadual: 44448850048</p>
+
                     </div>
                 </div>
                 <hr>
@@ -2188,11 +2189,13 @@ const novaPaginaHtml = `
         <div class="container my-5">
             <div class="d-flex align-items-start">
                 <div>
-                    <p class="mb-1"><strong>Acrópoluz Soluções em Iluminação</strong></p>
-                    <p class="mb-1">Endereço: Av. Portugal, 4370 - Itapoã, Belo Horizonte - MG, 31270-705</p>
-                    <p class="mb-1">Telefone: (31) 3448-2500</p>
-                    <p class="mb-1">Email: contato@acropoluz.com.br</p>
-                    <p class="mb-1">Inscrição estadual: 44448850048</p>
+                  <p class="mb-1"><strong>VISIA Lighting Solution LTDA</strong></p>
+<p class="mb-1">Endereço: Rua Alvimar Carneiro 1832, Novo Progresso - Contagem, MG - 32115160</p>
+<p class="mb-1">Telefone: Celular: (31) 98893-0131</p>
+<p class="mb-1">Email: contato@acropoluz.com.br</p>
+<p class="mb-1">CNPJ: 48.008.794/0001-66</p>
+<p class="mb-1">Inscrição estadual: 44448850048</p>
+
                 </div>
             </div>
             <hr>

@@ -236,7 +236,7 @@ function adicionarProduto() {
              <td><textarea class="form-control" rows="3" cols="30"></textarea></td>
             <td>
                 <i class="fa fa-times" style="cursor: pointer; color: red;" onclick="removerProduto(this, '${ambienteSelecionado}')" title="Remover Produto"></i>
-                <i class="fa fa-question-circle" style="cursor: pointer; color: blue; margin-right: 10px;" onclick="adicionarObservacao(this)" title="Adicionar Observação"></i>
+                
             </td>
         `;
 
@@ -518,7 +518,7 @@ function incluirProdutosSelecionados() {
             <td><input type="text" class="form-control valorTotal" value="${(valorUnitario).toFixed(2).replace('.', ',')}" onchange="atualizarValorUnitario(this, '${ambienteSelecionado}')"></td>
             <td>
                 <i class="fa fa-times" style="cursor: pointer; color: red;" onclick="removerProduto(this, '${ambienteSelecionado}')" title="Remover Produto"></i>
-                <i class="fa fa-question-circle" style="cursor: pointer; color: blue; margin-right: 10px;" onclick="adicionarObservacao(this)" title="Adicionar Observação"></i>
+                
             </td>
         `;
 
@@ -600,7 +600,7 @@ function preencherProdutosNosAmbientes(produtos) {
                                 <td style="white-space: nowrap;"><input type="text" class="form-control valorTotal" value="${valorTotal.toFixed(2).replace('.', ',')}" onchange="atualizarValorUnitario(this, '${ambiente}')"></td>
                                 <td><textarea class="form-control" rows="3" cols="30">${produto.observacao || ''}</textarea></td>
                                 <td>
-                                    <i class="fa fa-question-circle" style="cursor: pointer; color: blue; margin-right: 10px;" onclick="adicionarObservacao(this)" title="Adicionar Observação"></i>
+                                    
                                     <i class="fa fa-times" style="cursor: pointer; color: red;" onclick="removerProduto(this, '${ambiente}')" title="Remover Produto"></i>
                                 </td>
                             </tr>
@@ -719,7 +719,7 @@ function adicionarOuIncluirProdutoGenerico() {
               <td><textarea class="form-control" rows="3" cols="30">${produto.observacao || ''}</textarea></td>
             <td>
                 <i class="fa fa-times" style="cursor: pointer; color: red;" onclick="removerProduto(this, '${ambienteSelecionado}')" title="Remover Produto"></i>
-                <i class="fa fa-question-circle" style="cursor: pointer; color: blue; margin-right: 10px;" onclick="adicionarObservacao(this)" title="Adicionar Observação"></i>
+                
             </td>
         `;
 
@@ -1162,16 +1162,20 @@ async function atualizarProposta() {
                 const codigoProduto = row.querySelector("td:nth-child(4)")?.innerText.trim() || '';
                 const codigoInterno = row.querySelector("td:nth-child(5)")?.innerText.trim() || '';
                 const valorUnitario = row.querySelector(".valorUnitario")?.innerText.replace(/[R$]/g, '').replace(/\./g, '').replace(',', '.') || 0;
-                console.log(valorUnitario);
-
                 const quantidade = parseFloat(row.querySelector(".quantidadeProduto")?.value || 0);
                 const valorTotal = parseFloat(row.querySelector(".valorTotal")?.innerText.replace(/[^\d,.-]/g, '').replace(',', '.') || 0);
+
                 let observacao = '';
 
-                // Verificar observação
-                const nextRow = row.nextElementSibling;
-                if (nextRow && nextRow.classList.contains('observacao-row')) {
-                    observacao = nextRow.querySelector('textarea')?.value.trim() || '';
+                // Verificar observação em cada linha
+                const observacaoEspecifica = row.querySelector('textarea[placeholder="Adicione sua observação aqui"]')?.value.trim();
+                const observacaoGeral = row.querySelector('textarea[cols="30"]')?.value.trim();
+
+                // Se o campo específico de observação está preenchido, usá-lo
+                if (observacaoEspecifica) {
+                    observacao = observacaoEspecifica;
+                } else if (observacaoGeral) {
+                    observacao = observacaoGeral;
                 }
 
                 if (nomeProduto && !isNaN(valorUnitario) && !isNaN(quantidade) && !isNaN(valorTotal)) {
@@ -1202,7 +1206,7 @@ async function atualizarProposta() {
             informacoesOrcamento: {
                 vendedor,
                 agenteArquiteto,
-                transportadora: tipoEntrega ,
+                transportadora: tipoEntrega,
                 tipoEntrega,
                 valorFrete,
                 tipoPagamento,
@@ -1240,6 +1244,9 @@ async function atualizarProposta() {
         alert('Erro ao se conectar ao servidor. Tente novamente mais tarde.');
     }
 }
+
+
+
 
 // Função para gerar e enviar a proposta para a API
 // Função de exemplo para atualização de status
@@ -1338,7 +1345,7 @@ async function gerarEEnviarProposta() {
             modalidade: "9"
         },
         informacoes_adicionais: {
-            codigo_categoria: "1.05.98",
+            codigo_categoria: "1.05.98",         
             codigo_conta_corrente: 8470223564,
             consumidor_final: "S",
             enviar_email: "N"

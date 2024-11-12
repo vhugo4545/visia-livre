@@ -658,6 +658,7 @@ function criarTabelaAmbiente(ambiente) {
                     <th>Valor Unitário</th>
                     <th>Quantidade</th>
                     <th>Valor Total</th>
+                     <th>Obs</th>
                     <th>Ação</th>
                 </tr>
             </thead>

@@ -516,6 +516,7 @@ function incluirProdutosSelecionados() {
             <td><span class="valorUnitario">${valorUnitario.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span></td>
             <td><input type="number" class="form-control quantidadeProduto" min="1" value="1" onchange="atualizarTodosOsCalculos('${ambienteSelecionado}')"></td>
             <td><input type="text" class="form-control valorTotal" value="${(valorUnitario).toFixed(2).replace('.', ',')}" onchange="atualizarValorUnitario(this, '${ambienteSelecionado}')"></td>
+           <td><textarea class="form-control" rows="3" cols="30">${produto.observacao || ''}</textarea></td>
             <td>
                 <i class="fa fa-times" style="cursor: pointer; color: red;" onclick="removerProduto(this, '${ambienteSelecionado}')" title="Remover Produto"></i>
                 

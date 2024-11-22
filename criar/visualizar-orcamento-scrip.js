@@ -339,7 +339,7 @@ async function filtrarProdutos() {
 }
 // Função para pesquisar ambientes
 async function pesquisarAmbiente() {
-    const pesquisa = document.getElementById('ambienteSelecionado').value.toLowerCase();
+    const pesquisa = document.getElementById('ambienteSelecionado').value.toLowerCase().trim();
     const ambienteSuggestions = document.getElementById('ambienteSuggestions');
 
     ambienteSuggestions.innerHTML = '';
@@ -352,16 +352,31 @@ async function pesquisarAmbiente() {
     }
 
     try {
-        const response = await fetch('https://visia-2-3e2614848767.herokuapp.com/ambientes');
+        const response = await fetch('https://acropoluz-2-2e754a37c36d.herokuapp.com/ambientes');
         if (!response.ok) {
             throw new Error('Erro ao buscar os ambientes');
         }
 
         const ambientes = await response.json();
-        const ambientesFiltrados = ambientes.filter(ambiente =>
+
+        // Normalizar os nomes dos ambientes (remover espaços e converter para minúsculas)
+        const ambientesNormalizados = ambientes.map(ambiente => ({
+            ...ambiente,
+            nome: ambiente.nome.trim()
+        }));
+
+        // Remover duplicatas
+        const ambientesSemDuplicatas = Array.from(
+            new Map(ambientesNormalizados.map(ambiente => [ambiente.nome.toLowerCase(), ambiente]))
+            .values()
+        );
+
+        // Filtrar os ambientes pela pesquisa
+        const ambientesFiltrados = ambientesSemDuplicatas.filter(ambiente =>
             ambiente.nome.toLowerCase().includes(pesquisa)
         );
 
+        // Adicionar ao autocomplete
         ambientesFiltrados.forEach(ambiente => {
             const div = document.createElement('div');
             div.classList.add('item-autocomplete');
@@ -378,8 +393,11 @@ async function pesquisarAmbiente() {
             div.classList.add('item-autocomplete');
             div.innerHTML = `<strong>Cadastrar novo ambiente: "${pesquisa}"</strong>`;
             div.onclick = async function () {
-                await cadastrarAmbiente(pesquisa);
-                ambienteSuggestions.style.display = 'none';
+                const confirmacao = confirm(`Tem certeza que deseja cadastrar o ambiente: "${pesquisa}"?`);
+                if (confirmacao) {
+                    await cadastrarAmbiente(pesquisa);
+                    ambienteSuggestions.style.display = 'none';
+                }
             };
             ambienteSuggestions.appendChild(div);
         }
